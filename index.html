@@ -137,56 +137,59 @@
 
     <div class="header">
         <h1>🚀 O/L Master Pro</h1>
-        <p>දවිභාගෙ ගොඩ දාමු!</p>
+        <p>විභාගෙ ගොඩ දාමු!</p>
     </div>
 
     <div class="grid" id="subjectGrid">
     </div>
 
     <script>
+       
         const subjects = [
-            { id: 'History', name: 'History (ඉතිහාසය)', icon: '📜' },
-            { id: 'Buddhism', name: 'Buddhism (බුද්ධාගම)', icon: '☸️' },
-            { id: 'Science', name: 'Science (විද්‍යාව)', icon: '🧬' },
-            { id: 'Maths', name: 'Mathematics (ගණිතය)', icon: '📐' },
-            { id: 'Sinhala', name: 'Sinhala (සිංහල)', icon: '✍️' },
-            { id: 'English', name: 'English', icon: '🇬🇧' },
-            { id: 'Civic', name: 'Civic (පුරවැසි)', icon: '🏛️' },
-            { id: 'Dancing', name: 'Dancing (නැටුම්)', icon: '💃' },
-            { id: 'Music', name: 'Music (සංගීතය)', icon: '🎵' }
+            { id: 'History', name: 'History (ඉතිහාසය)', icon: '📜', link: 'quiz.html' },
+            { id: 'Science', name: 'Science (විද්‍යාව)', icon: '🧬', link: 'science.html' },
+            { id: 'Buddhism', name: 'Buddhism (බුද්ධාගම)', icon: '☸️', link: 'buddhism.html' },
+            { id: 'Maths', name: 'Mathematics (ගණිතය)', icon: '📐', link: 'maths.html' },
+            { id: 'Sinhala', name: 'Sinhala (සිංහල)', icon: '✍️', link: 'sinhala.html' },
+            { id: 'English', name: 'English', icon: '🇬🇧', link: 'english.html' },
+            { id: 'Civic', name: 'Civic (පුරවැසි)', icon: '🏛️', link: 'civic.html' },
+            { id: 'Dancing', name: 'Dancing (නැටුම්)', icon: '💃', link: 'dancing.html' },
+            { id: 'Music', name: 'Music (සංගීතය)', icon: '🎵', link: 'music.html' }
         ];
 
         window.onload = () => {
             const grid = document.getElementById('subjectGrid');
 
             subjects.forEach(sub => {
-                // Get Progress from LocalStorage
-                // Logic: We don't know total questions yet, so we show 'Solved Count'
                 const solved = JSON.parse(localStorage.getItem(`solved_${sub.id}`) || "[]").length;
 
                 const card = document.createElement('div');
                 card.className = 'card';
+                
+                card.onclick = () => startSubject(sub.id, sub.link);
+                
                 card.innerHTML = `
-                <div class="icon">${sub.icon}</div>
-                <div class="subject-name">${sub.name}</div>
-                <div class="stats">
-                    <span>Mastered: ${solved} Questions</span>
-                </div>
-                <div class="progress-container">
-                    <div class="progress-bar" style="width: 20%"></div> </div>
-                <button class="btn-start" onclick="startSubject('${sub.id}')">Start Session</button>
-            `;
+                    <div class="icon">${sub.icon}</div>
+                    <div class="subject-name">${sub.name}</div>
+                    <div class="stats">
+                        <span>Mastered: ${solved} Questions</span>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 20%"></div>
+                    </div>
+                    <button class="btn-start">Start Session</button>
+                `;
                 grid.appendChild(card);
             });
         };
 
-        function startSubject(subId) {
+        function startSubject(subId, pageName) {
             localStorage.setItem('currentSubject', subId);
-            window.location.href = 'quize.html';
+            
+            window.location.href = pageName;
         }
     </script>
 
 </body>
 
 </html>
-
