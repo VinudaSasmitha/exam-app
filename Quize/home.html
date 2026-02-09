@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="si">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart O/L Dashboard</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Noto+Sans+Sinhala:wght@400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4e54c8;
+            --secondary: #8f94fb;
+            --bg: #f4f7f6;
+            --text: #333;
+        }
+
+        body {
+            font-family: 'Poppins', 'Noto Sans Sinhala', sans-serif;
+            background: var(--bg);
+            margin: 0;
+            padding: 20px;
+            color: var(--text);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+        }
+
+        h1 {
+            color: var(--primary);
+            font-size: 2.5rem;
+            margin: 0;
+        }
+
+        p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            transition: 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(78, 84, 200, 0.2);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+
+        .icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .subject-name {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #444;
+        }
+
+        .progress-container {
+            width: 100%;
+            background: #eee;
+            border-radius: 10px;
+            height: 10px;
+            margin-top: 15px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            transition: width 1s;
+        }
+
+        .stats {
+            font-size: 0.9rem;
+            color: #888;
+            margin-top: 5px;
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .btn-start {
+            margin-top: 20px;
+            padding: 10px 25px;
+            border: none;
+            background: var(--primary);
+            color: white;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-start:hover {
+            background: #3b3f99;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        <h1>🚀 O/L Master Pro</h1>
+        <p>දවිභාගෙ ගොඩ දාමු!</p>
+    </div>
+
+    <div class="grid" id="subjectGrid">
+    </div>
+
+    <script>
+        const subjects = [
+            { id: 'History', name: 'History (ඉතිහාසය)', icon: '📜' },
+            { id: 'Buddhism', name: 'Buddhism (බුද්ධාගම)', icon: '☸️' },
+            { id: 'Science', name: 'Science (විද්‍යාව)', icon: '🧬' },
+            { id: 'Maths', name: 'Mathematics (ගණිතය)', icon: '📐' },
+            { id: 'Sinhala', name: 'Sinhala (සිංහල)', icon: '✍️' },
+            { id: 'English', name: 'English', icon: '🇬🇧' },
+            { id: 'Civic', name: 'Civic (පුරවැසි)', icon: '🏛️' },
+            { id: 'Dancing', name: 'Dancing (නැටුම්)', icon: '💃' },
+            { id: 'Music', name: 'Music (සංගීතය)', icon: '🎵' }
+        ];
+
+        window.onload = () => {
+            const grid = document.getElementById('subjectGrid');
+
+            subjects.forEach(sub => {
+                // Get Progress from LocalStorage
+                // Logic: We don't know total questions yet, so we show 'Solved Count'
+                const solved = JSON.parse(localStorage.getItem(`solved_${sub.id}`) || "[]").length;
+
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                <div class="icon">${sub.icon}</div>
+                <div class="subject-name">${sub.name}</div>
+                <div class="stats">
+                    <span>Mastered: ${solved} Questions</span>
+                </div>
+                <div class="progress-container">
+                    <div class="progress-bar" style="width: 20%"></div> </div>
+                <button class="btn-start" onclick="startSubject('${sub.id}')">Start Session</button>
+            `;
+                grid.appendChild(card);
+            });
+        };
+
+        function startSubject(subId) {
+            localStorage.setItem('currentSubject', subId);
+            window.location.href = 'exam.html';
+        }
+    </script>
+
+</body>
+
+</html>
