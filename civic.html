@@ -5343,7 +5343,7 @@
             const grid = document.getElementById('sets-grid');
             grid.innerHTML = '';
             const totalSets = Math.ceil(allQuestions.length / SET_SIZE);
-            const completedSets = JSON.parse(localStorage.getItem('history_exam_completed_sets')) || [];
+            const completedSets = JSON.parse(localStorage.getItem('civic_exam_completed_sets')) || [];
 
             for (let i = 0; i < totalSets; i++) {
                 const start = (i * SET_SIZE) + 1;
@@ -5488,10 +5488,10 @@
             const percent = Math.round((score / originalSetLength) * 100);
             document.getElementById('final-score').innerText = `${percent}%`;
 
-            const completedSets = JSON.parse(localStorage.getItem('history_exam_completed_sets')) || [];
+            const completedSets = JSON.parse(localStorage.getItem('civic_exam_completed_sets')) || [];
             if (!completedSets.includes(currentSetIndex)) {
                 completedSets.push(currentSetIndex);
-                localStorage.setItem('history_exam_completed_sets', JSON.stringify(completedSets));
+                localStorage.setItem('civic_exam_completed_sets', JSON.stringify(completedSets));
             }
 
             let msg = "", color = "";
@@ -5524,7 +5524,7 @@
 
         function clearProgress() {
             if (confirm("ඔබගේ Save වී ඇති සියලුම දත්ත මැකීමට අවශ්‍යද?")) {
-                localStorage.removeItem('history_exam_completed_sets');
+                localStorage.removeItem('civic_exam_completed_sets');
                 initHome();
             }
         }
