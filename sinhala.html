@@ -295,7 +295,12 @@
     </div>
 
     <script>
+        // ============================================
+        // 1. DATA & CONFIGURATION
+        // ============================================
+        const SET_SIZE = 10; // එක වටයකට ප්‍රශ්න කීයද?
 
+        // මෙන්න මෙතනට ඔයාගේ අලුත් ප්‍රශ්න ඔක්කොම (JSON ටික) Paste කරන්න
         const allQuestions = [ // ============================================
             // SINHALA LANGUAGE DATA (SET 01: GRAMMAR & USAGE - ID 01-50)
             // ============================================
@@ -2378,25 +2383,7 @@
             },
 
         ];
-
-        // තව dummy දත්ත (Testing සඳහා)
-        for (let i = 4; i <= 25; i++) {
-            allQuestions.push({
-                "ID": i,
-                "ප්‍රශ්නය (Question)": `Sample Question ${i}?`,
-                "අංක 1 (Opt 1)": "පිළිතුර 1",
-                "අංක 2 (Opt 2)": "පිළිතුර 2",
-                "අංක 3 (Opt 3)": "පිළිතුර 3",
-                "අංක 4 (Opt 4)": "පිළිතුර 4",
-                "හරි පිළිතුර": 1, // Default answer 1
-                "විස්තරය (Explanation for Recall)": "Sample explanation."
-            });
-        }
-
-        // ============================================
-        // APP LOGIC
-        // ============================================
-        const SET_SIZE = 20;
+        // Global Variables
         let currentSetIndex = 0;
         let setQuestions = [];
         let currentQIndex = 0;
@@ -2404,14 +2391,14 @@
         let originalSetLength = 0;
         let isAnswered = false;
 
-        // Motivation Messages
-        const msgsCorrect = ["නියමයි! 🎉", "සුපිරි වැඩක්! 🌟", "හරියටම හරි! ✅", "Ela! දිගටම යමු! 🚀"];
-        const msgsRetrySuccess = ["දැන් හරි! මතක තියාගමු! 👍", "Good Job! (පුනරීක්ෂණය සාර්ථකයි)"];
-        const msgsWrong = ["අයියෝ වැරදියි! 😅", "කමක් නෑ, මේක ආයේ කරමු! 🔄", "පොඩි මිස් එකක්! 🤔"];
+        // Messages
+        const msgsCorrect = ["නියමයි! ✅", "හරියට හරි! 🌟", "සුපිරි! 👏", "Excellent! 🔥"];
+        const msgsRetrySuccess = ["දැන් හරි! 👍", "Good Job! 🛠️", "මතක තියාගන්න! 🧠"];
+        const msgsWrong = ["අයියෝ වැරදියි! ❌", "ආයිත් උත්සාහ කරන්න! ⚠️", "පොඩ්ඩක් බලන්න... 🤔"];
 
-        // --------------------------------------------
-        // 1. HOME SCREEN
-        // --------------------------------------------
+        // ============================================
+        // 2. HOME SCREEN LOGIC
+        // ============================================
         function initHome() {
             const grid = document.getElementById('sets-grid');
             grid.innerHTML = '';
@@ -2437,9 +2424,9 @@
             showScreen('home-screen');
         }
 
-        // --------------------------------------------
-        // 2. QUIZ ENGINE
-        // --------------------------------------------
+        // ============================================
+        // 3. QUIZ ENGINE (UPDATED FOR NEW JSON KEYS)
+        // ============================================
         function startSet(setIdx) {
             currentSetIndex = setIdx;
             const start = setIdx * SET_SIZE;
@@ -2465,8 +2452,8 @@
             document.getElementById('q-number').innerText = counterText;
             document.getElementById('score-display').innerText = `ලකුණු: ${score} / ${originalSetLength}`;
 
-            // Question Text
-            document.getElementById('question-text').innerText = (qData.isRetry ? "🔄 " : (qData["ID"] + ". ")) + qData["ප්‍රශ්නය (Question)"];
+            // Question Text (UPDATED KEY: "ප්‍රශ්නය")
+            document.getElementById('question-text').innerText = (qData.isRetry ? "🔄 " : (qData["ID"] + ". ")) + qData["ප්‍රශ්නය"];
 
             // Progress Bar
             const progress = ((currentQIndex) / setQuestions.length) * 100;
@@ -2476,19 +2463,22 @@
             document.getElementById('feedback-area').style.display = 'none';
             document.getElementById('feedback-area').className = 'feedback-area';
 
-            // Render Options (UPDATED LOGIC HERE)
+            // Render Options
             const optionsContainer = document.getElementById('options-container');
             optionsContainer.innerHTML = '';
 
             [1, 2, 3, 4].forEach(num => {
-                const optText = qData[`අංක ${num} (Opt ${num})`];
+                // UPDATED KEY: "අංක 1", "අංක 2" etc.
+                const optKey = "අංක " + num;
+                const optText = qData[optKey];
+
                 if (optText) {
                     const btn = document.createElement('button');
                     btn.className = 'option-btn';
                     btn.innerText = optText;
 
-                    // Pass 'num' (selected number) and correct answer number
-                    btn.onclick = () => checkAnswer(btn, num, qData["හරි පිළිතුර"], qData["විස්තරය (Explanation for Recall)"], qData);
+                    // Pass correct keys for checking
+                    btn.onclick = () => checkAnswer(btn, num, qData["හරි පිළිතුර"], qData["විස්තරය"], qData);
 
                     optionsContainer.appendChild(btn);
                 }
@@ -2501,9 +2491,8 @@
 
             const feedbackArea = document.getElementById('feedback-area');
             const feedbackTitle = document.getElementById('feedback-title');
-            const allBtns = document.querySelectorAll('.option-btn'); // Get all current buttons
+            const allBtns = document.querySelectorAll('.option-btn');
 
-            // Compare Numbers (== used to handle potential string/number mismatch, but strictly numbers are better)
             if (selectedNum == correctNum) {
                 // --- CORRECT ---
                 btn.classList.add('correct');
@@ -2526,7 +2515,6 @@
                 feedbackTitle.style.color = "#721c24";
 
                 // Highlight Correct Answer automatically
-                // correctNum is 1-based (1,2,3,4), array index is 0-based (0,1,2,3)
                 if (allBtns[correctNum - 1]) {
                     allBtns[correctNum - 1].classList.add('correct');
                 }
@@ -2539,6 +2527,7 @@
                 }
             }
 
+            // Show Explanation (UPDATED KEY: "විස්තරය")
             document.getElementById('explanation-text').innerText = expl ? `විස්තරය: ${expl}` : "";
             feedbackArea.style.display = 'block';
             document.getElementById('score-display').innerText = `ලකුණු: ${score} / ${originalSetLength}`;
@@ -2553,9 +2542,9 @@
             }
         }
 
-        // --------------------------------------------
-        // 3. END SCREEN & SAVING
-        // --------------------------------------------
+        // ============================================
+        // 4. RESULTS & NAVIGATION
+        // ============================================
         function showResults() {
             showScreen('end-screen');
             const percent = Math.round((score / originalSetLength) * 100);
