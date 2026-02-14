@@ -27,7 +27,7 @@ An interactive web-based quiz application specially designed for Sri Lankan G.C.
 
 * **HTML5** - Structure of the application.
 * **CSS3** - Styling and UI layout.
-* **JavaScript** - Core logic for the quiz and scoring system.
+* **JavaScript** - Core logic for the quiz and scoring system and using json style
 * **Hosting:** GitHub Pages / Netlify.
 
 
